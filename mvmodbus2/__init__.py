@@ -295,14 +295,6 @@ class modbus_func(object):
         self.transaction_identifier = transaction_identifier or 0
         self.unit_identifier = unit_identifier or 1
 
-    class EFrame(BaseException):
-        """Slave returned error code
-        or frame error detected"""
-
-    class EAgain(BaseException):
-        """Received message is incomplete
-        """
-
     def chkansw_echo(self, response):
         """Analizza la parte di segnalazione errore del messaggio ricevuto
         per le funzioni che fanno solo echo (func5 e simili)
@@ -318,7 +310,7 @@ class modbus_func(object):
             self.bytecount = 0
             return (func_code, self.bytecount, response[1:])
         self.bus_err = func_code
-        raise self.EFrame(
+        raise EFrame(
             f'Slave returned cod error {func_code:x} {err_code:x}')
 
     def chkansw(self, response):
@@ -336,7 +328,7 @@ class modbus_func(object):
             self.bus_err = 0
             return (function_code, self.bytecount, response[2:])
         self.bus_err = function_code
-        raise self.EFrame(
+        raise EFrame(
             f'Slave returned cod error {function_code:x} {self.bytecount}')
 
     def bytes_left_with_bytecount(self, bytestring):

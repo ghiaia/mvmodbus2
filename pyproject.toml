@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mvmodbus2"
-version = "0.0.0"
+version = "0.0.1"
 authors = [
   { name="Marco Vaccari", email="marcov@marcov.it" },
 ]
