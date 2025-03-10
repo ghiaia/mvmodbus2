@@ -4,7 +4,6 @@ Strumento: Nemo 96 HD
 Interfaccia ETHERNET IF96015
 """
 
-import sys
 import mvmodbus2
 import json
 
@@ -20,12 +19,9 @@ def S_WORD(val):
     """Signed word"""
     return val[0] if val[0] < 32768 else val[0] - 65536
 
-def scala_misura(val, div):
-    """Scala"""
-    return 1.0 * val / div
 
 CONST_SCALA_NOTA3 = 1
-
+CONST_SCALA_NOTA4 = 1
 
 def scala_nota3(val):
     """Nota 3:
@@ -34,9 +30,6 @@ def scala_nota3(val):
     """
     return val * CONST_SCALA_NOTA3
 
-CONST_SCALA_NOTA4 = 1
-
-
 def scala_nota4(val):
     """vedi nota 4"""
     return val * CONST_SCALA_NOTA4
@@ -44,6 +37,7 @@ def scala_nota4(val):
 def scala_nota5(val):
     """vedi nota 5"""
     return [1, -1][val]
+
 
 REGISTRI_MISURE106 = [
 (0x1000, UD_WORD, 'Phase 1 : phase voltage', 'mV', lambda x: x),
@@ -131,10 +125,12 @@ REGISTRI_MISURE106 = [
 (0x1207, U_WORD, 'Voltage transformer ratio (KTV) 1/100', '1/100', lambda x: x/100.0),
 ]
 
+
 REGISTRI_MISURE106_map = {
     reg[2]: dict(zip(('address', 'convert', 'name', 'unit', 'rescale'), reg))
         for reg in REGISTRI_MISURE106
 }
+
 
 def get_regs(slave, regs_list):
     """Get regs regs_list (part of REGISTRI_MISURE106) from slave_addr"""
